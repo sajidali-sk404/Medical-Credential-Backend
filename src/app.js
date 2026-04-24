@@ -11,7 +11,7 @@ import adminRoutes    from './routes/admin.js'
 const app = express()
 
 app.use(cors({
-  origin:      process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin:      process.env.FRONTEND_URL || 'https://medical-credential-frontend-egen-6mawd8j8l.vercel.app',
   credentials: true,   // required for cookies to be sent cross-origin
 }))
 app.use(express.json())
