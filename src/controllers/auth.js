@@ -136,4 +136,5 @@ export const getMe = async (req, res) => {
     role: req.user.role,
     image: req.user.image,
   })
+  console.log("Cookies:", req.cookies);
 }
