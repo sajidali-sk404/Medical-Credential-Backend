@@ -8,47 +8,42 @@ import Client   from '../models/Client.js'
 // Populates req.user with the decoded payload.
 // Attaches req.clientProfile if the user is a client (needed for client_id scoping).
 
+// middleware/auth.js
 export const verifyToken = async (req, res, next) => {
   try {
-    const token = req.cookies?.token
-      || req.headers.authorization?.split(' ')[1]
+    // Read from Authorization header first, then cookie
+    const token = req.headers.authorization?.split(" ")[1]
+      || req.cookies?.token
 
     if (!token) {
-      return res.status(401).json({ message: 'Authentication required' })
+      return res.status(401).json({ message: "Authentication required" })
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    // decoded = { id, role, iat, exp }
+    const user    = await User.findById(decoded.id).select("-password_hash")
 
-    // Confirm user still exists in DB (handles deleted/banned accounts)
-    const user = await User.findById(decoded.id).select('-password_hash')
     if (!user) {
-      return res.status(401).json({ message: 'Account no longer exists' })
+      return res.status(401).json({ message: "Account no longer exists" })
     }
 
-    req.user = user   // full Mongoose doc — has ._id, .role, .name, .email
+    req.user = user
 
-    // If client, attach their Client profile so controllers have client._id
-    if (user.role === 'client') {
+    if (user.role === "client") {
       const clientProfile = await Client.findOne({ user_id: user._id })
       if (!clientProfile) {
-        return res.status(403).json({ message: 'Client profile not found' })
+        return res.status(403).json({ message: "Client profile not found" })
       }
-      req.clientProfile = clientProfile   // controllers use req.clientProfile._id
+      req.clientProfile = clientProfile
     }
 
     next()
   } catch (err) {
-    if (err.name === 'TokenExpiredError') {
-      return res.status(401).json({ message: 'Session expired — please log in again' })
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Session expired" })
     }
-    if (err.name === 'JsonWebTokenError') {
-      return res.status(401).json({ message: 'Invalid token' })
-    }
-    res.status(500).json({ message: 'Server error' })
+    return res.status(401).json({ message: "Invalid token" })
   }
 }
-
 // ── 2. Require admin role ─────────────────────────────────────────
 // Always chain AFTER verifyToken — never use standalone.
 
