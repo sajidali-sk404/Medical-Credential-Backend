@@ -12,13 +12,15 @@ const app = express()
 
 app.set('trust proxy', 1); // 🔥 REQUIRED on Render
 app.use(cors({
-  origin: true,          // 🔥 reflect request origin automatically
-  credentials: true
+  origin: (origin, callback) => {
+    if (!origin || origin.endsWith(".vercel.app")) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
 }));
-
-app.use(express.json())
-app.use(cookieParser())
-
 
 app.use((req, res, next) => {
   res.setHeader(
@@ -27,6 +29,11 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+app.use(express.json())
+app.use(cookieParser())
+
+
 
 app.use('/api/auth', authRoutes)
 app.use('/api/requests', requestRoutes)
