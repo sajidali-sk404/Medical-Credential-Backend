@@ -1,25 +1,31 @@
 // app.js
-import express      from 'express'
+import express from 'express'
 import cookieParser from 'cookie-parser'
-import cors         from 'cors'
+import cors from 'cors'
 import 'dotenv/config'
 
-import authRoutes     from './routes/auth.js'
-import requestRoutes  from './routes/requests.js'
-import adminRoutes    from './routes/admin.js'
+import authRoutes from './routes/auth.js'
+import requestRoutes from './routes/requests.js'
+import adminRoutes from './routes/admin.js'
 
 const app = express()
 
 app.use(cors({
-  origin:      process.env.FRONTEND_URL || 'https://medical-credential-fron-git-deabfc-sajid-alis-projects-0b343f64.vercel.app',
-  credentials: true,   // required for cookies to be sent cross-origin
-}))
+  origin: (origin, callback) => {
+    if (!origin || origin.includes("vercel.app")) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json())
 app.use(cookieParser())
 
-app.use('/api/auth',     authRoutes)
+app.use('/api/auth', authRoutes)
 app.use('/api/requests', requestRoutes)
-app.use('/api/admin',    adminRoutes)
+app.use('/api/admin', adminRoutes)
 
 // Global error handler — catches Multer errors and anything else
 app.use((err, req, res, next) => {
