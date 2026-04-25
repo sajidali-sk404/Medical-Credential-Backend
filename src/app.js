@@ -11,12 +11,13 @@ import adminRoutes from './routes/admin.js'
 const app = express()
 
 app.set('trust proxy', 1); // 🔥 REQUIRED on Render
-app.use(cors({
+
+const corsOptions = {
   origin: process.env.FRONTEND_URL || "medical-credential-fron-git-f85636-sajid-alis-projects-0b343f64.vercel.app", // main domain
-  credentials: true,   // ← MUST be true for cookies to work cross-origin
+  credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-}));
+}
 
 app.use(cors(corsOptions))
 // Handle preflight for all routes
