@@ -13,7 +13,7 @@ const app = express()
 app.set('trust proxy', 1); // 🔥 REQUIRED on Render
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "medical-credential-fron-git-f85636-sajid-alis-projects-0b343f64.vercel.app", // main domain
+  origin: process.env.FRONTEND_URL || "https://medical-credential-frontend.vercel.app", // main domain
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
