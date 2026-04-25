@@ -12,13 +12,7 @@ const app = express()
 
 app.set('trust proxy', 1); // 🔥 REQUIRED on Render
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || origin.endsWith(".vercel.app")) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: process.env.FRONTEND_URL || "medical-credential-fron-git-f85636-sajid-alis-projects-0b343f64.vercel.app", // main domain
   credentials: true,
 }));
 
