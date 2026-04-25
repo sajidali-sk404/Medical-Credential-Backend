@@ -32,10 +32,12 @@ export const login = async (req, res) => {
     // httpOnly cookie — JS on the browser cannot read this
     res.cookie('token', token, {
       httpOnly: true,
+      secure: true,
       sameSite: 'none',
-      secure: true,  // HTTPS only in prod
-      maxAge: 7 * 24 * 60 * 60 * 1000               // 7 days in ms
-    })
+      domain: '.onrender.com',   // 🔥 ADD THIS
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
 
     res.json({
       message: 'Login successful',
@@ -47,6 +49,7 @@ export const login = async (req, res) => {
         role: user.role,
       }
     })
+    console.log("Cookies:", req.cookies);
   } catch (err) {
     console.error(err)
     res.status(500).json({ message: 'Server error' })
@@ -123,7 +126,8 @@ export const logout = (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
     sameSite: 'none',
-    secure: true
+    secure: true,
+    domain: '.onrender.com'   // 🔥 ADD THIS
   })
   res.json({ message: 'Logged out' })
 }
@@ -136,5 +140,4 @@ export const getMe = async (req, res) => {
     role: req.user.role,
     image: req.user.image,
   })
-  console.log("Cookies:", req.cookies);
 }
