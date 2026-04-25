@@ -10,6 +10,7 @@ import adminRoutes from './routes/admin.js'
 
 const app = express()
 
+app.set('trust proxy', 1); // 🔥 REQUIRED on Render
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || origin.includes("vercel.app")) {
