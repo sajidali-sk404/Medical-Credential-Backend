@@ -13,8 +13,14 @@ const app = express()
 app.set('trust proxy', 1); // 🔥 REQUIRED on Render
 app.use(cors({
   origin: process.env.FRONTEND_URL || "medical-credential-fron-git-f85636-sajid-alis-projects-0b343f64.vercel.app", // main domain
-  credentials: true,
+  credentials: true,   // ← MUST be true for cookies to work cross-origin
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
+
+// Handle preflight for all routes
+app.options("*", cors())
 
 app.use((req, res, next) => {
   res.setHeader(
