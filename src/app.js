@@ -12,15 +12,10 @@ const app = express()
 
 app.set('trust proxy', 1); // 🔥 REQUIRED on Render
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || origin.includes("vercel.app")) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: true,          // 🔥 reflect request origin automatically
   credentials: true
 }));
+
 app.use(express.json())
 app.use(cookieParser())
 
