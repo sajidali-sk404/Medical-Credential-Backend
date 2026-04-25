@@ -23,6 +23,15 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 
+
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' blob:; object-src 'none';"
+  );
+  next();
+});
+
 app.use('/api/auth', authRoutes)
 app.use('/api/requests', requestRoutes)
 app.use('/api/admin', adminRoutes)
@@ -39,12 +48,5 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Server error' })
 })
 
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' blob:; object-src 'none';"
-  );
-  next();
-});
 
 export default app
