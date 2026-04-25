@@ -1,3 +1,7 @@
+import "dotenv/config"
+import mongoose from "mongoose"
+import app      from "./src/app.js"
+
 // server.js — add at the very top
 process.on("uncaughtException", (err) => {
   console.error("UNCAUGHT EXCEPTION:", err)
@@ -9,9 +13,6 @@ process.on("unhandledRejection", (reason) => {
   process.exit(1)
 })
 
-import "dotenv/config"
-import mongoose from "mongoose"
-import app      from "./src/app.js"
 
 const PORT = process.env.PORT || 5000
 

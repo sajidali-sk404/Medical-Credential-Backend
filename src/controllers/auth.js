@@ -35,7 +35,6 @@ export const login = async (req, res) => {
       secure: true,
       sameSite: 'none',
       domain: '.onrender.com',   // 🔥 ADD THIS
-      path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
