@@ -133,6 +133,7 @@ export const logout = (req, res) => {
 }
 
 export const getMe = async (req, res) => {
+  res.set("Cache-Control", "no-store")
   res.json({
     id: req.user._id,
     name: req.user.name,
