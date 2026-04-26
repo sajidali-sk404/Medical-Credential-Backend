@@ -1,34 +1,35 @@
 // src/app.js
-import express      from "express"
+import express from "express"
 import cookieParser from "cookie-parser"
-import cors         from "cors"
+import cors from "cors"
 
-import authRoutes    from "./routes/auth.js"
+import authRoutes from "./routes/auth.js"
 import requestRoutes from "./routes/requests.js"
-import adminRoutes   from "./routes/admin.js"
+import adminRoutes from "./routes/admin.js"
 
 const app = express()
 
-// ── CORS must be the very first middleware ─────────────────────────
+// ── Manual CORS — covers all headers ──────────────────────────────
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin",  "https://medical-credential-frontend.vercel.app")
+  res.header("Access-Control-Allow-Origin", "https://medical-credential-frontend.vercel.app")
   res.header("Access-Control-Allow-Credentials", "true")
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS")
-  res.header("Access-Control-Allow-Headers", "Content-Type,Authorization")
+  res.header("Access-Control-Allow-Headers", "Content-Type,Authorization,Cache-Control,Pragma,Expires")
 
-  // Handle preflight
   if (req.method === "OPTIONS") {
     return res.sendStatus(200)
   }
   next()
 })
 
+
+
 app.use(express.json())
 app.use(cookieParser())
 
-app.use("/api/auth",     authRoutes)
+app.use("/api/auth", authRoutes)
 app.use("/api/requests", requestRoutes)
-app.use("/api/admin",    adminRoutes)
+app.use("/api/admin", adminRoutes)
 
 app.use((err, req, res, next) => {
   if (err.code === "LIMIT_FILE_SIZE") {
